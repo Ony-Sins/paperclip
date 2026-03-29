@@ -753,25 +753,65 @@ export function OnboardingWizard() {
                     />
                   </div>
 
+                  <div className="rounded-md border border-border bg-muted/20 p-3 space-y-1.5">
+                    <p className="text-sm font-medium">
+                      Choose how this agent will run
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Pick a runtime that matches where you want the work to
+                      happen:
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      <span className="font-medium text-foreground">
+                        Local tools on this machine
+                      </span>{" "}
+                      for quick setup, or{" "}
+                      <span className="font-medium text-foreground">
+                        external or advanced runtime
+                      </span>{" "}
+                      when you need more control.
+                    </p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      You can start simple now and fine-tune later.
+                    </p>
+                  </div>
+
                   {/* Adapter type radio cards */}
                   <div>
+                    <div className="mb-2">
+                      <p className="text-xs font-medium">Choose a setup path</p>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed">
+                        Start with a local runtime for the simplest setup.
+                        Expand advanced options only if you need more control.
+                      </p>
+                    </div>
                     <label className="text-xs text-muted-foreground mb-2 block">
-                      Adapter type
+                      Runtime type
                     </label>
+                    <p className="text-[11px] text-muted-foreground mb-2 leading-relaxed">
+                      Start with a local option if you want the easiest setup.
+                      Advanced and external runtimes are available when you need
+                      more control.
+                    </p>
+                    <div className="mb-2 flex items-center gap-2">
+                      <span className="inline-flex items-center rounded-full border border-border bg-muted/40 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                        Best for getting started
+                      </span>
+                    </div>
                     <div className="grid grid-cols-2 gap-2">
                       {[
                         {
                           value: "claude_local" as const,
                           label: "Claude Code",
                           icon: Sparkles,
-                          desc: "Local Claude agent",
+                          desc: "Fastest local setup on this machine.",
                           recommended: true
                         },
                         {
                           value: "codex_local" as const,
                           label: "Codex",
                           icon: Code,
-                          desc: "Local Codex agent",
+                          desc: "Local Codex workflow for users who prefer OpenAI's coding runtime.",
                           recommended: true
                         }
                       ].map((opt) => (
@@ -818,94 +858,101 @@ export function OnboardingWizard() {
                           showMoreAdapters ? "rotate-0" : "-rotate-90"
                         )}
                       />
-                      More Agent Adapter Types
+                      More runtime options
                     </button>
 
                     {showMoreAdapters && (
-                      <div className="grid grid-cols-2 gap-2 mt-2">
-                        {[
-                          {
-                            value: "gemini_local" as const,
-                            label: "Gemini CLI",
-                            icon: Gem,
-                            desc: "Local Gemini agent"
-                          },
-                          {
-                            value: "opencode_local" as const,
-                            label: "OpenCode",
-                            icon: OpenCodeLogoIcon,
-                            desc: "Local multi-provider agent"
-                          },
-                          {
-                            value: "pi_local" as const,
-                            label: "Pi",
-                            icon: Terminal,
-                            desc: "Local Pi agent"
-                          },
-                          {
-                            value: "cursor" as const,
-                            label: "Cursor",
-                            icon: MousePointer2,
-                            desc: "Local Cursor agent"
-                          },
-                          {
-                            value: "hermes_local" as const,
-                            label: "Hermes Agent",
-                            icon: HermesIcon,
-                            desc: "Local multi-provider agent"
-                          },
-                          {
-                            value: "openclaw_gateway" as const,
-                            label: "OpenClaw Gateway",
-                            icon: Bot,
-                            desc: "Invoke OpenClaw via gateway protocol",
-                            comingSoon: true,
-                            disabledLabel: "Configure OpenClaw within the App"
-                          }
-                        ].map((opt) => (
-                          <button
-                            key={opt.value}
-                            disabled={!!opt.comingSoon}
-                            className={cn(
-                              "flex flex-col items-center gap-1.5 rounded-md border p-3 text-xs transition-colors relative",
-                              opt.comingSoon
-                                ? "border-border opacity-40 cursor-not-allowed"
-                                : adapterType === opt.value
-                                ? "border-foreground bg-accent"
-                                : "border-border hover:bg-accent/50"
-                            )}
-                            onClick={() => {
-                              if (opt.comingSoon) return;
-                              const nextType = opt.value as AdapterType;
-                              setAdapterType(nextType);
-                              if (nextType === "gemini_local" && !model) {
-                                setModel(DEFAULT_GEMINI_LOCAL_MODEL);
-                                return;
-                              }
-                              if (nextType === "cursor" && !model) {
-                                setModel(DEFAULT_CURSOR_LOCAL_MODEL);
-                                return;
-                              }
-                              if (nextType === "opencode_local") {
-                                if (!model.includes("/")) {
-                                  setModel("");
+                      <>
+                        <div className="mt-2 flex items-center gap-2">
+                          <span className="inline-flex items-center rounded-full border border-border bg-muted/40 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
+                            More options
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 mt-2">
+                          {[
+                            {
+                              value: "gemini_local" as const,
+                              label: "Gemini CLI",
+                              icon: Gem,
+                              desc: "Local Gemini workflow for users who prefer Google's CLI runtime."
+                            },
+                            {
+                              value: "opencode_local" as const,
+                              label: "OpenCode",
+                              icon: OpenCodeLogoIcon,
+                              desc: "Local multi-provider agent"
+                            },
+                            {
+                              value: "pi_local" as const,
+                              label: "Pi",
+                              icon: Terminal,
+                              desc: "Local Pi agent"
+                            },
+                            {
+                              value: "cursor" as const,
+                              label: "Cursor",
+                              icon: MousePointer2,
+                              desc: "Local Cursor agent"
+                            },
+                            {
+                              value: "hermes_local" as const,
+                              label: "Hermes Agent",
+                              icon: HermesIcon,
+                              desc: "Local multi-provider agent"
+                            },
+                            {
+                              value: "openclaw_gateway" as const,
+                              label: "OpenClaw Gateway",
+                              icon: Bot,
+                              desc: "Invoke OpenClaw via gateway protocol",
+                              comingSoon: true,
+                              disabledLabel: "Configure OpenClaw within the App"
+                            }
+                          ].map((opt) => (
+                            <button
+                              key={opt.value}
+                              disabled={!!opt.comingSoon}
+                              className={cn(
+                                "flex flex-col items-center gap-1.5 rounded-md border p-3 text-xs transition-colors relative",
+                                opt.comingSoon
+                                  ? "border-border opacity-40 cursor-not-allowed"
+                                  : adapterType === opt.value
+                                  ? "border-foreground bg-accent"
+                                  : "border-border hover:bg-accent/50"
+                              )}
+                              onClick={() => {
+                                if (opt.comingSoon) return;
+                                const nextType = opt.value as AdapterType;
+                                setAdapterType(nextType);
+                                if (nextType === "gemini_local" && !model) {
+                                  setModel(DEFAULT_GEMINI_LOCAL_MODEL);
+                                  return;
                                 }
-                                return;
-                              }
-                              setModel("");
-                            }}
-                          >
-                            <opt.icon className="h-4 w-4" />
-                            <span className="font-medium">{opt.label}</span>
-                            <span className="text-muted-foreground text-[10px]">
-                              {opt.comingSoon
-                                ? (opt as { disabledLabel?: string })
-                                    .disabledLabel ?? "Coming soon"
-                                : opt.desc}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
+                                if (nextType === "cursor" && !model) {
+                                  setModel(DEFAULT_CURSOR_LOCAL_MODEL);
+                                  return;
+                                }
+                                if (nextType === "opencode_local") {
+                                  if (!model.includes("/")) {
+                                    setModel("");
+                                  }
+                                  return;
+                                }
+                                setModel("");
+                              }}
+                            >
+                              <opt.icon className="h-4 w-4" />
+                              <span className="font-medium">{opt.label}</span>
+                              <span className="text-muted-foreground text-[10px]">
+                                {opt.comingSoon
+                                  ? (opt as { disabledLabel?: string })
+                                      .disabledLabel ?? "Coming soon"
+                                  : opt.desc}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </>
                     )}
                   </div>
 
